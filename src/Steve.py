@@ -4,7 +4,6 @@ eyed3.log.setLevel("ERROR")
 class Steve(object):
         def __init__(self):
                 self.filepath = []
-                self.carp = []
                 self.artist = []
                 self.albums = []
                 self.songs = []
@@ -19,8 +18,9 @@ class Steve(object):
                         self.artist.append(audio.tag.artist)
                         self.albums.append(audio.tag.album)
                         self.songs.append(audio.tag.title)
-
-                        
-
-
-
+        def get_artist(self):
+                return self.artist
+        def get_albums(self):
+                return self.albums
+        def get_songs(self):
+                return self.songs
