@@ -33,3 +33,5 @@ class Rola(object):
         return self.album
     def get_path(self):
         return self.path
+    def get_genre(self):
+        return self.genre
