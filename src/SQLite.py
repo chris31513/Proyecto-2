@@ -2,7 +2,7 @@ import sqlite3
 try:
     conn = sqlite3.connect('songs.db')
     cur = conn.cursor()
-    cur.execute('''CREATE TABLE IF NOT EXISTS types (
+    cur.execute('''CREATE TABLE types (
     id_type
     INTEGER PRIMARY KEY ,
     description
@@ -22,7 +22,7 @@ try:
     ( id_type ) REFERENCES types ( id_type )
     );''')
     
-    cur.execute('''CREATE TABLE IF NOT EXISTS persons (
+    cur.execute('''CREATE TABLE persons (
     id_person
     INTEGER PRIMARY KEY ,
     stage_name
@@ -34,7 +34,7 @@ try:
     death_date
     TEXT
     );''')
-    cur.execute('''CREATE TABLE IF NOT EXISTS groups (
+    cur.execute('''CREATE TABLE groups (
     id_group
     INTEGER PRIMARY KEY ,
     name
@@ -44,7 +44,7 @@ try:
     end_date
     TEXT
     );''')
-    cur.execute('''CREATE TABLE IF NOT EXISTS albums (
+    cur.execute('''CREATE TABLE albums (
     id_album
     INTEGER PRIMARY KEY ,
     path
@@ -55,7 +55,7 @@ try:
     INTEGER
     );''')
     
-    cur.execute('''CREATE TABLE IF NOT EXISTS rolas (
+    cur.execute('''CREATE TABLE rolas (
     id_rola
     INTEGER PRIMARY KEY ,
     id_performer INTEGER ,
@@ -77,7 +77,7 @@ try:
     ( id_album )
     REFERENCES albums ( id_album )
     );''')
-    cur.execute('''CREATE TABLE IF NOT EXISTS in_group (
+    cur.execute('''CREATE TABLE in_group (
     id_person
     INTEGER ,
     id_group
