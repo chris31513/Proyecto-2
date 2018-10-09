@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..")
 from src.Steve import Steve
-import src.SQLite as s
+from src.SQLite import SQLite
 import gi
 import os
 gi.require_version('Gtk', '3.0')
@@ -10,8 +10,9 @@ class MyWindow(Gtk.Window):
 
     def __init__(self):
         Gtk.Window.__init__(self, title="Rolas")
-        s
         self.button = Gtk.Button(label="Click Here")
+        s = SQLite()
+        s.connect()
         self.button.connect("clicked", self.on_button_clicked)
         self.add(self.button)
 
