@@ -1,7 +1,7 @@
 import os
 from mutagen.id3 import ID3
-from DAO import DAO
-from Rola import Rola
+from .DAO import DAO
+from .Rola import Rola
 class Steve(object):
         def __init__(self):
                 self.filepath = []
@@ -21,12 +21,9 @@ class Steve(object):
                         rola.set_year(str(audio['TDRC']))
                         rola.set_album(str(audio['TALB']))
                         rola.set_number(str(audio['TRCK']))
-                        self.set_genre(str(audio['TCON']))
+                        rola.set_genre(str(audio['TCON']))
                         self.rolas.append(rola)
         def insertion(self):
                 dao = DAO()
-                for i in self.rolas:
-                        dao.insert_album(i.get_path(),i.get_album(),i.get_year())
-                        dao.insert_person(i.get_artist())
-                        dao.insert_rola(i.get_path(),i.get_name(),i.get_number(),i.get_year(), i.get_genre())
-                dao.unplugg()
+                dao.insert(self.rolas)
+
