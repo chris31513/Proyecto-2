@@ -5,7 +5,6 @@ class DAO(object):
         self.rolas =[]
         pree_path = os.path.expanduser('~/.local')
         self.path = pree_path + '/'+'rolas.db'
-        print(self.path)
     def insert(self,rolas):
         with sqlite3.connect(self.path) as conn:
             id_type = 2
