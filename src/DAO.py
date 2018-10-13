@@ -1,14 +1,16 @@
 import sqlite3
 class DAO(object):
+    def __init__(self):
+        self.rolas =[]
     def insert(self,rolas):
         with sqlite3.connect('songs.db') as conn:
             id_type = 2
             c = conn.cursor()
             i = 0
             for rola in rolas:
-                c.execute('''SELECT title FROM rolas''')
+                c.execute('''SELECT path FROM rolas''')
                 checker = c.fetchall()
-                if (rola.get_name(),) in checker:
+                if (rola.get_path(),) in checker:
                     break
                 c.execute('''BEGIN;''')
                 c.execute('''INSERT INTO performers(id_type,name) VALUES(?,?)''',(id_type,rola.get_artist(),))
@@ -22,3 +24,9 @@ class DAO(object):
                 i += 1
                 c.execute('''END;''')
                 conn.commit()
+    def consult(self):
+        with sqlite3.connect('songs.db') as conn:
+            c = conn.cursor()
+            c.execute('''SELECT track,rolas.title,name,rolas.year FROM albums INNER JOIN rolas ON albums.id_album = rolas.id_album ''')
+            tabla = c.fetchall()
+            return tabla
