@@ -1,9 +1,13 @@
+import os
 import sqlite3
 class DAO(object):
     def __init__(self):
         self.rolas =[]
+        pree_path = os.path.expanduser('~/.local')
+        self.path = pree_path + '/'+'rolas.db'
+        print(self.path)
     def insert(self,rolas):
-        with sqlite3.connect('songs.db') as conn:
+        with sqlite3.connect(self.path) as conn:
             id_type = 2
             c = conn.cursor()
             i = 0
@@ -25,8 +29,14 @@ class DAO(object):
                 c.execute('''END;''')
                 conn.commit()
     def consult(self):
-        with sqlite3.connect('songs.db') as conn:
+        with sqlite3.connect(self.path) as conn:
             c = conn.cursor()
             c.execute('''SELECT track,rolas.title,name,rolas.year FROM albums INNER JOIN rolas ON albums.id_album = rolas.id_album ''')
             tabla = c.fetchall()
             return tabla
+    def search_path(self,song):
+        with sqlite3.connect(self.path) as conn:
+            c = conn.cursor()
+            c.execute('''SELECT path FROM rolas WHERE title = ?''',(song,))
+            path = c.fetchall()
+            return path

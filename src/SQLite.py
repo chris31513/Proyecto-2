@@ -1,9 +1,11 @@
 import sqlite3
+import os
 class SQLite(object):
     def connect(self):
-        
+        pree_path = os.path.expanduser('~/.local')
+        path = pree_path + '/'+'rolas.db'
         try:
-            conn = sqlite3.connect('songs.db')
+            conn = sqlite3.connect(path)
             cur = conn.cursor()
             cur.execute('''CREATE TABLE types (
             id_type

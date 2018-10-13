@@ -13,3 +13,6 @@ class Control(object):
     def consult(self):
         dao = DAO()
         return dao.consult()
+    def search_path(self,song):
+        dao = DAO()
+        return dao.search_path(song)[0][0]
