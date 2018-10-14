@@ -1,7 +1,11 @@
-import sys
-sys.path.append('..')
-import threading
-from src.Control import Control
+if __name__ == '__main__':
+    if __package__ is None:
+        import sys
+        from os import path
+        sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
+        from src.Control import Control
+    else:
+        from ..src.Control import Control
 import vlc
 import gi
 gi.require_version('Gtk','3.0')
@@ -14,9 +18,10 @@ class MyWindow(Gtk.Window):
 
     def __init__(self):
         Gtk.Window.__init__(self,title = 'Rolas')
+        self.set_icon_from_file('icon/compact-disc.svg')
         album_for_menu = []
         self.songs = []
-        self.set_default_size(500,500)
+        self.set_default_size(900,500)
         layout = Gtk.VBox()
         main_menu = Gtk.MenuBar()
         menu = Gtk.Menu()
