@@ -12,20 +12,41 @@ class Steve(object):
                         for file in files:
                                 self.filepath.extend([os.path.join(root,file)])
         def get_mp3_tags(self):
-                try:
-                        for i in self.filepath:
-                                audio = ID3(i)
-                                rola = Rola()
-                                rola.set_path(i)
+                for i in self.filepath:
+                        audio = ID3(i)
+                        rola = Rola()
+                        rola.set_path(i)
+                        if 'TPE1' in audio:
                                 rola.set_artist(str(audio['TPE1']))
+                        else:
+                                rola.set_artist('Unknown')
+                        if 'TIT2' in audio:
                                 rola.set_name(str(audio['TIT2']))
+                        else:
+                                rola.set_name('Unknown')
+                        if 'TDRC' in audio:
                                 rola.set_year(str(audio['TDRC']))
+                        else:
+                                rola.set_year(0)
+                        if 'TALB' in audio:
                                 rola.set_album(str(audio['TALB']))
-                                rola.set_number(str(audio['TRCK']))
+                        else:
+                                rola.set_album('Unknown')
+                        if 'TRCK' in audio:
+                                s = str(audio['TRCK'])
+                                try:
+                                        r = int(s)
+                                        rola.set_number(s)
+                                except:
+                                        l = s.split('/',1)
+                                        rola.set_number(l[0])
+                        else:
+                                rola.set_number(0)
+                        if 'TCON' in audio:
                                 rola.set_genre(str(audio['TCON']))
-                                self.rolas.append(rola)
-                except:
-                        pass
+                        else:
+                                rola.set_genre('Unknwon')
+                        self.rolas.append(rola)
         def insertion(self):
                 dao = DAO()
                 dao.insert(self.rolas)

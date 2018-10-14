@@ -30,7 +30,7 @@ class MyWindow(Gtk.Window):
         self.control = Control()
         self.control.mine()
         rolas = self.control.consult()
-        rolas_list_store = Gtk.ListStore(int,str,str,int)
+        rolas_list_store = Gtk.ListStore(int,str,str,int,str)
         for rola in rolas:
             rolas_list_store.append(list(rola))
             if rola[2] not in album_for_menu:
@@ -47,7 +47,7 @@ class MyWindow(Gtk.Window):
         main_menu.append(album_dropdown)
         pre_rolas_tree = Gtk.TreeModelSort(self.album_filter)
         rolas_tree = Gtk.TreeView(pre_rolas_tree)
-        for i,title in enumerate(["Track", "Name", "Album","Year"]):
+        for i,title in enumerate(["Track", "Name", "Album","Year","Artist"]):
             renderer = Gtk.CellRendererText()
             column = Gtk.TreeViewColumn(title,renderer,text = i)
             column.set_sort_column_id(i)
@@ -82,7 +82,7 @@ class MyWindow(Gtk.Window):
     def play_song(self,selection):
         try:
             model,row = selection.get_selected()
-            song = vlc.MediaPlayer(self.control.search_path(model[row][1]))
+            song = vlc.MediaPlayer(self.control.search_path(model[row][1],model[row][2]))
             self.songs.append(song)
             self.songs[0].play()
             self.songs[0].stop()
