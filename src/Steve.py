@@ -47,6 +47,7 @@ class Steve(object):
                         else:
                                 rola.set_genre('Unknwon')
                         self.rolas.append(rola)
+                self.filepath.clear()
         def insertion(self):
                 dao = DAO()
                 dao.insert(self.rolas)

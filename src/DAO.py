@@ -15,7 +15,7 @@ class DAO(object):
                 c.execute('''SELECT path FROM rolas''')
                 checker = c.fetchall()
                 if (rola.get_path(),) in checker:
-                    break
+                    rolas.pop(0)
                 else:
                     c.execute('''INSERT INTO performers(id_type,name) VALUES(?,?)''',(id_type,rola.get_artist(),))
                     c.execute('''INSERT INTO groups(name) VALUES(?)''',(rola.get_artist(),))
@@ -23,8 +23,8 @@ class DAO(object):
                     c.execute('''SELECT id_album FROM albums''')
                     id_album = c.fetchall()
                     c.execute('''SELECT id_performer FROM performers''')
-                    id_performer = c.fetchall()
-                    c.execute('''INSERT INTO rolas(id_album,id_performer,path,title,track,year) VALUES(?,?,?,?,?,?)''',(id_album.pop(i)[0],id_performer.pop(i)[0],rola.get_path(),rola.get_name(),int(rola.get_number()),int(rola.get_year(),)))
+                    id_performer = c.fetchall() 
+                    c.execute('''INSERT INTO rolas(id_album,id_performer,path,title,track,year) VALUES(?,?,?,?,?,?)''',(id_album.pop(len(id_album)-1)[0],id_performer.pop(len(id_performer) - 1)[0],rola.get_path(),rola.get_name(),int(rola.get_number()),int(rola.get_year(),)))
                     i += 1
                     conn.commit()
     def consult(self):

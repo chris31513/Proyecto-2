@@ -18,11 +18,11 @@ warnings.filterwarnings('ignore')
 class MyWindow(Gtk.Window):
 
     def __init__(self):
-        Gtk.Window.__init__(self,title = 'Rolas')
+        Gtk.Window.__init__(self,title = 'Rolitas')
         self.set_icon_from_file('icon/compact-disc.svg')
         self.album_for_menu = []
         self.songs = []
-        self.set_default_size(900,500)
+        self.set_default_size(1000,500)
         layout = Gtk.VBox()
         self.searchentry = Gtk.SearchEntry()
         self.searchentry.connect("activate",self.search)
@@ -37,8 +37,6 @@ class MyWindow(Gtk.Window):
         self.control = Control()
         self.rolas = []
         self.rolas_list_store = Gtk.ListStore(int,str,str,int,str)
-        #for rola in self.rolas:
-         #   self.rolas_list_store.append(list(rola))
         self.rolas_tree = Gtk.TreeView(self.rolas_list_store)
         for i,title in enumerate(["Track", "Name", "Album","Year","Artist"]):
             renderer = Gtk.CellRendererText()
@@ -70,6 +68,7 @@ class MyWindow(Gtk.Window):
         layout.pack_start(self.rolas_tree,True,True,0)
     def stop(self,widget):
         self.songs[0].stop()
+        self.songs.pop(0)
     def pause(self,widget):
         self.songs[0].pause()
     def play_song(self,selection):
@@ -78,7 +77,6 @@ class MyWindow(Gtk.Window):
             song = vlc.MediaPlayer(self.control.search_path(model[row][1],model[row][2]))
             self.songs.append(song)
             self.songs[0].play()
-            self.songs[0].stop()
             if len(self.songs) > 1:
                 self.songs[0].stop()
                 self.songs.pop(0)
@@ -88,6 +86,7 @@ class MyWindow(Gtk.Window):
     def refresh_search(self,widget):
         self.rolas_tree.set_model(self.rolas_list_store)
     def minar(self,widget):
+        self.rolas_list_store.clear()
         self.control.mine()
         self.rolas = self.control.consult()
         for rola in self.rolas:
