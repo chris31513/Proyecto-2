@@ -8,6 +8,7 @@ if __name__ == '__main__':
         from ..src.Control import Control
 import vlc
 import gi
+import threading
 gi.require_version('Gtk','3.0')
 from gi.repository import Gtk
 import warnings
@@ -19,50 +20,46 @@ class MyWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self,title = 'Rolas')
         self.set_icon_from_file('icon/compact-disc.svg')
-        album_for_menu = []
+        self.album_for_menu = []
         self.songs = []
         self.set_default_size(900,500)
         layout = Gtk.VBox()
+        self.searchentry = Gtk.SearchEntry()
+        self.searchentry.connect("activate",self.search)
+        layout.pack_start(self.searchentry,False,False,0)
         main_menu = Gtk.MenuBar()
-        menu = Gtk.Menu()
         menu_player = Gtk.Menu()
-        album_dropdown = Gtk.MenuItem("Albums")
-        album_dropdown.set_submenu(menu)
+        refresh_menu = Gtk.Menu()
         scroll_window = Gtk.ScrolledWindow()
         scroll_window.set_vexpand(True)
         scroll_window.add(layout)
         self.add(scroll_window)
         self.control = Control()
-        self.control.mine()
-        rolas = self.control.consult()
-        rolas_list_store = Gtk.ListStore(int,str,str,int,str)
-        for rola in rolas:
-            rolas_list_store.append(list(rola))
-            if rola[2] not in album_for_menu:
-                album_for_menu.append(rola[2])
-        album_for_menu.append("None")
-        for album in album_for_menu:
-            album = Gtk.MenuItem(album)
-            album.set_hexpand(False)
-            album.connect("activate",self.on_selection_button_clicked)
-            menu.append(album)
-        self.current_filter_album = None
-        self.album_filter = rolas_list_store.filter_new()
-        self.album_filter.set_visible_func(self.album_filter_func)
-        main_menu.append(album_dropdown)
-        pre_rolas_tree = Gtk.TreeModelSort(self.album_filter)
-        rolas_tree = Gtk.TreeView(pre_rolas_tree)
+        self.rolas = []
+        self.rolas_list_store = Gtk.ListStore(int,str,str,int,str)
+        #for rola in self.rolas:
+         #   self.rolas_list_store.append(list(rola))
+        self.rolas_tree = Gtk.TreeView(self.rolas_list_store)
         for i,title in enumerate(["Track", "Name", "Album","Year","Artist"]):
             renderer = Gtk.CellRendererText()
             column = Gtk.TreeViewColumn(title,renderer,text = i)
             column.set_sort_column_id(i)
             column.set_clickable(True)
-            rolas_tree.append_column(column)
-        song_selected = rolas_tree.get_selection()
+            self.rolas_tree.append_column(column)
+        song_selected = self.rolas_tree.get_selection()
         song_selected.connect("changed",self.play_song)
         player_dropdown = Gtk.MenuItem("Player")
         pause = Gtk.MenuItem("Pause")
         stop = Gtk.MenuItem("Stop")
+        refresh = Gtk.MenuItem("Refresh")
+        miner = Gtk.MenuItem("Mine")
+        search_r = Gtk.MenuItem("Search")
+        search_r.connect("activate",self.refresh_search)
+        miner.connect("activate", self.minar)
+        refresh.set_submenu(refresh_menu)
+        refresh_menu.append(miner)
+        refresh_menu.append(search_r)
+        main_menu.append(refresh)
         player_dropdown.set_submenu(menu_player)
         pause.connect("activate",self.pause)
         stop.connect("activate",self.stop)
@@ -70,20 +67,11 @@ class MyWindow(Gtk.Window):
         menu_player.append(stop)
         main_menu.append(player_dropdown)
         layout.pack_start(main_menu,False,False,0)
-        layout.pack_start(rolas_tree,True,True,0)
+        layout.pack_start(self.rolas_tree,True,True,0)
     def stop(self,widget):
         self.songs[0].stop()
     def pause(self,widget):
         self.songs[0].pause()
-    def album_filter_func(self, model, iter, data):
-        if self.current_filter_album is None or self.current_filter_album == "None":
-            return True
-        else:
-            return model[iter][2] == self.current_filter_album
-    def on_selection_button_clicked(self, widget):
-        self.current_filter_album = widget.get_label()
-        print("%s album selected!" % self.current_filter_album)
-        self.album_filter.refilter()
     def play_song(self,selection):
         try:
             model,row = selection.get_selected()
@@ -97,6 +85,24 @@ class MyWindow(Gtk.Window):
                 self.songs[0].play()
         except:
             pass
+    def refresh_search(self,widget):
+        self.rolas_tree.set_model(self.rolas_list_store)
+    def minar(self,widget):
+        self.control.mine()
+        self.rolas = self.control.consult()
+        for rola in self.rolas:
+            self.rolas_list_store.append(list(rola))
+        self.rolas_tree.set_model(self.rolas_list_store)
+    def search(self,entry):
+        try:
+            search = entry.get_text().split(maxsplit=1)
+            new_list_store = Gtk.ListStore(int,str,str,int,str)
+            for i in self.control.search(search):
+                new_list_store.append(list(i))
+            self.rolas_tree.set_model(new_list_store)
+            entry.set_text('')
+        except:
+            self.rolas_tree.set_model(self.rolas_list_store)
 window = MyWindow()
 window.connect('destroy',Gtk.main_quit)
 window.show_all()

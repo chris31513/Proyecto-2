@@ -50,3 +50,21 @@ class DAO(object):
                         true_path_list.append(path)
                         path_list = true_path_list
             return path_list
+    def search_artist(self,artist):
+        with sqlite3.connect(self.path) as conn:
+            c = conn.cursor()
+            c.execute('''SELECT rolas.track,rolas.title,albums.name,rolas.year,performers.name FROM performers,albums JOIN rolas ON albums.id_album = rolas.id_album AND rolas.id_performer = performers.id_performer WHERE performers.name = ?''',(artist,))
+            artist_list = c.fetchall()
+            return artist_list
+    def search_song(self,song):
+        with sqlite3.connect(self.path) as conn:
+            c = conn.cursor()
+            c.execute('''SELECT rolas.track,rolas.title,albums.name,rolas.year,performers.name FROM performers,albums JOIN rolas ON albums.id_album = rolas.id_album AND rolas.id_performer = performers.id_performer WHERE rolas.title = ?''',(song,))
+            song_list = c.fetchall()
+            return song_list
+    def search_album(self,album):
+        with sqlite3.connect(self.path) as conn:
+            c = conn.cursor()
+            c.execute('''SELECT rolas.track,rolas.title,albums.name,rolas.year,performers.name FROM performers,albums JOIN rolas ON albums.id_album = rolas.id_album AND rolas.id_performer = performers.id_performer WHERE albums.name = ?''',(album,))
+            album_list = c.fetchall()
+            return album_list
