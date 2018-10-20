@@ -33,6 +33,35 @@ class DAO(object):
             c.execute('''SELECT track,rolas.title,albums.name,rolas.year,performers.name FROM albums,performers INNER JOIN rolas ON albums.id_album = rolas.id_album AND rolas.id_performer = performers.id_performer''')
             tabla = c.fetchall()
             return tabla
+    def edit_name(self,new_song,last_song,album):
+        with sqlite3.connect(self.path) as conn:
+            c = conn.cursor()
+            c.execute('''UPDATE rolas SET title = ? WHERE title = ? AND id_album = ?''',(new_song,last_song,self.search_name(last_song,album)))
+    def search_name(self,song,album):
+        with sqlite3.connect(self.path) as conn:
+            c = conn.cursor()
+            c.execute('''SELECT rolas.id_album FROM albums,rolas WHERE rolas.title = ? AND name = ?''',(song,album,))
+            tabla = c.fetchall()
+            return tabla[0][0]
+    def edit_artist(self,new_artist,song,album):
+        with sqlite3.connect(self.path) as conn:
+            c = conn.cursor()
+            c.execute('''UPDATE performers SET name = ? WHERE id_performer = ? ''',(new_artist,self.search_id_performer(song,album),))
+    def edit_album(self,new_album,song,album):
+        with sqlite3.connect(self.path) as conn:
+            c = conn.cursor()
+            c.execute('''UPDATE albums SET name = ? WHERE id_album = ? ''',(new_album,self.search_id_album(song,album),))
+    def search_id_performer(self,song,album):
+        with sqlite3.connect(self.path) as conn:
+            c = conn.cursor()
+            c.execute('''SELECT rolas.id_performer FROM rolas,albums WHERE title = ? AND albums.name = ?''',(song,album,))
+            tabla = c.fetchall()
+            return tabla[0][0]
+    def search_id_album(self,song,album):
+        with sqlite3.connect(self.path) as conn:
+            c = conn.cursor()
+            c.execute('''SELECT rolas.id_album FROM rolas,albums WHERE title = ? AND albums.name = ?''',(song,album,))
+            return c.fetchall()[0][0]
     def search_path(self,song,album):
         with sqlite3.connect(self.path) as conn:
             c = conn.cursor()

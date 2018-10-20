@@ -19,6 +19,18 @@ class Control(object):
         dao = DAO()
         path = dao.search_path(song,album)[0][0]
         return path
+    def search_edit(self,song,album):
+        dao = DAO()
+        print(song,album)
+    def edit_song_name(self,new_song,old_song,album):
+        dao = DAO()
+        dao.edit_name(new_song,old_song,album)
+    def edit_artist(self,new_artist,song,album):
+        dao = DAO()
+        dao.edit_artist(new_artist,song,album)
+    def edit_album(self,new_album,song,album):
+        dao = DAO()
+        dao.edit_album(new_album,song,album)
     def search(self,list):
         dao = DAO()
         if list[0] == 'Artist:':
