@@ -2,12 +2,11 @@ if __name__ == '__main__':
     if __package__ is None:
         import sys
         from os import path
-        sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
+        sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
         from src.Control import Control
     else:
         from ..src.Control import Control
 import vlc
-import threading
 import gi
 gi.require_version('Gtk','3.0')
 from gi.repository import Gtk
