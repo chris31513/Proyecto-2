@@ -93,10 +93,13 @@ class MyWindow(Gtk.Window):
         except:
             pass
     def stop(self,widget):
-        self.songs[0].stop()
-        self.songs.pop(0)
-        self.song_p.pop(0)
-        self.album_p.pop(0)
+        try:
+            self.songs[0].stop()
+            self.songs.pop(0)
+            self.song_p.pop(0)
+            self.album_p.pop(0)
+        except:
+            pass
     def pause(self,widget):
         self.songs[0].pause()
     def edit_tags(self,widget):
