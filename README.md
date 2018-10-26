@@ -41,7 +41,7 @@ Versión:<br />
     PyGObject, es un modulo que permite la interacción entre GTK y python, debería estar instalado. En el caso contrario, hay muchas maneras instalarlo para cada distribución<br />
     <br />
   Recomendaciones:<br />
-    Es demasiado recomendable que se ejectue el comando despíes de usar la app:<br />
+    Es demasiado recomendable que se ejectue el comando despues de usar la app:<br />
       $ make clean<br />
       <br />
   Errores conocidos:<br />
